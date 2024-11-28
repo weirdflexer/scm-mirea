@@ -4,12 +4,10 @@ from datetime import datetime
 from pathlib import Path
 
 def read_config(config_path):
-    """Читает конфигурационный файл."""
     with open(config_path, "r") as file:
         return yaml.safe_load(file)
 
 def get_git_commits(repo_path, start_date):
-    """Получает список коммитов после заданной даты."""
     cmd = [
         "git",
         "-C", repo_path,
@@ -23,7 +21,6 @@ def get_git_commits(repo_path, start_date):
     return result.stdout.strip().split("\n\n")
 
 def parse_commits(raw_commits):
-    """Парсит данные о коммитах и извлекает зависимости."""
     graph = {}
     for block in raw_commits:
         lines = block.split("\n")
@@ -37,7 +34,6 @@ def parse_commits(raw_commits):
     return graph
 
 def generate_plantuml(graph):
-    """Создаёт представление PlantUML для графа."""
     lines = ["@startuml", "digraph G {"]
     for node, dependencies in graph.items():
         for dep in dependencies:
@@ -47,12 +43,10 @@ def generate_plantuml(graph):
     return "\n".join(lines)
 
 def save_output(output_path, content):
-    """Сохраняет результат в файл."""
     with open(output_path, "w") as file:
         file.write(content)
 
 def main(config_path):
-    """Основная функция."""
     config = read_config(config_path)
     repo_path = config["repository_path"]
     start_date = config["start_date"]
