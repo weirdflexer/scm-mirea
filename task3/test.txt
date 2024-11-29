@@ -1,0 +1,10 @@
+def MAX_SIZE := 1024
+def DATABASE := {
+    name -> "my_database".
+    port -> 5432.
+}
+server -> {
+    host -> "localhost".
+    port -> @[MAX_SIZE].
+    database -> @[DATABASE].
+}

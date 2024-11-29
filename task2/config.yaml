@@ -1,4 +1,4 @@
 visualizer_path: "/usr/local/bin/plantuml"
-repository_path: "/PATH_TO_REPO"
+repository_path: "/Users/aleksandrvolentir/java"
 output_path: "./dependencies_graph.puml"
 start_date: "2024-01-01"

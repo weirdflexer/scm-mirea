@@ -34,7 +34,9 @@ class Emulator:
         self.vfs_path = self.config['vfs_path']
         self.log_path = self.config['log_path']
         self.startup_script = self.config['startup_script']
+        self.home_dir = ''
         self.current_dir = ''
+        self.previous_dirs = []
         self.init_vfs()
         logger.debug('Emulator initialized')
 
@@ -136,13 +138,20 @@ class Emulator:
         Выполняет команду 'cd'.
         """
         logger.debug('Changing directory: %s', path)
+
         if path == '..':
-            self.current_dir = os.path.normpath(os.path.join(self.current_dir, '..')) + '/'
+            if self.previous_dirs:
+                # Возвращаемся на предыдущую директорию
+                self.current_dir = self.previous_dirs.pop()
+            else:
+                return "cd: ..: Already at the root directory"
         else:
             new_path = os.path.join(self.current_dir, path)
             if not new_path.endswith('/'):
                 new_path += '/'
             if any(name.startswith(new_path) for name in self.zip_ref.namelist()):
+                # Сохраняем текущую директорию в стек перед сменой
+                self.previous_dirs.append(self.current_dir)
                 self.current_dir = new_path
             else:
                 return f"cd: {path}: No such file or directory"
