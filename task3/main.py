@@ -1,65 +1,131 @@
-import sys
+import argparse
 import re
-import json
+import toml
+import sys
 
-# Словарь для хранения объявленных констант
-constants = {}
 
-# Функция для обработки значений
-def parse_value(value):
-    # Если значение является числом
-    if re.match(r'^\d+$', value):
-        return int(value)
-    # Если значение является вложенным словарем
-    elif value.startswith("{") and value.endswith("}"):
-        return parse_dict(value)
-    # Если значение является константой
-    elif value.startswith("@["):
-        const_name = value[2:-1]
-        return constants.get(const_name, f"ERROR: Unknown constant {const_name}")
-    return value
+class ConfigParser:
+    def __init__(self):
+        self.constants = {}
+        self.current_dict_stack = []
+        self.current_key_stack = []
+        self.current_parsed_dict = {}
 
-# Функция для обработки словаря
-def parse_dict(text):
-    # Убираем внешние скобки и разбиваем на строки
-    inner_text = text[1:-1].strip()
-    result = {}
-    lines = inner_text.split("\n")
-    for line in lines:
-        if '->' in line:
-            key, value = line.split('->')
-            key = key.strip()
-            value = value.strip().rstrip(".")
-            result[key] = parse_value(value)
-    return result
-
-# Функция для обработки объявления константы
-def handle_constant_declaration(line):
-    match = re.match(r"def (\w+) := (.+)", line)
-    if match:
-        const_name = match[1]
-        value = match[2].strip()
-        constants[const_name] = parse_value(value)
-
-# Основная функция для обработки входного файла
-def parse_file(file_path):
-    with open(file_path, "r") as file:
-        for line in file:
+    def parse(self, input_text):
+        lines = input_text.splitlines()
+        for line in lines:
             line = line.strip()
-            if line.startswith("def"):
-                handle_constant_declaration(line)
-            elif "->" in line:
-                key, value = line.split("->")
-                key = key.strip()
-                value = value.strip().rstrip(".")
-                print(f"{key} = {json.dumps(parse_value(value))}")
-            else:
-                print(f"ERROR: Invalid syntax in line: {line}")
+            if not line or line.startswith("#"):
+                continue
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python config_parser.py <path_to_input_file>")
+            if line.startswith("def "):
+                self._define_constant(line)
+            elif line == "{":
+                self._start_dictionary()
+            elif line == "}":
+                self._end_dictionary()
+            elif re.match(r"[_a-zA-Z0-9]+\s*->\s*{", line):
+                self._start_nested_dictionary(line)
+            elif self._current_dict() is not None:
+                self._add_to_dictionary(line)
+
+        if self._current_dict() is not None:
+            raise SyntaxError("Unclosed dictionary detected.")
+
+        return self.current_parsed_dict
+
+    def _current_dict(self):
+        return self.current_dict_stack[-1] if self.current_dict_stack else None
+
+    def _define_constant(self, line):
+        match = re.match(r"def\s+([_A-Z][_a-zA-Z0-9]*)\s*:=\s*(.+)", line)
+        if not match:
+            raise SyntaxError(f"Invalid constant definition: {line}")
+        name, value = match.groups()
+        self.constants[name] = self._evaluate_value(value)
+
+    def _evaluate_value(self, value):
+        value = value.strip()
+        if value.startswith("@[") and value.endswith("]"):
+            constant_name = value[2:-1]
+            if constant_name not in self.constants:
+                raise ValueError(f"Undefined constant: {constant_name}")
+            return self.constants[constant_name]
+        try:
+            return int(value)
+        except ValueError:
+            return value
+
+    def _start_dictionary(self):
+        new_dict = {}
+        if self._current_dict() is not None:
+            self.current_dict_stack.append(self._current_dict())
+        self.current_dict_stack.append(new_dict)
+
+    def _end_dictionary(self):
+        if len(self.current_dict_stack) <= 0:
+            raise SyntaxError("No dictionary to close.")
+
+        current_dict = self.current_dict_stack.pop()
+
+        if self.current_key_stack:
+            parent_key = self.current_key_stack.pop()
+            if self._current_dict() is not None:
+                self._current_dict()[parent_key] = current_dict
+            else:
+                self.current_parsed_dict[parent_key] = current_dict
+        else:
+            self.current_parsed_dict.update(current_dict)
+
+    def _start_nested_dictionary(self, line):
+        match = re.match(r"([_a-zA-Z0-9]+)\s*->\s*{", line)
+        if not match:
+            raise SyntaxError(f"Invalid syntax: {line}")
+        key = match.group(1)
+        new_dict = {}
+        if self._current_dict() is not None:
+            self._current_dict()[key] = new_dict
+        self.current_dict_stack.append(new_dict)
+        self.current_key_stack.append(key)
+
+    def _add_to_dictionary(self, line):
+        match = re.match(r"([_a-zA-Z0-9]+)\s*->\s*(\S+)\.", line)
+        if not match:
+            raise SyntaxError(f"Invalid dictionary entry: {line}")
+        key, value = match.groups()
+        if self._current_dict() is not None:
+            self._current_dict()[key] = self._evaluate_value(value)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="CLI Config Language Parser")
+    parser.add_argument("input_file", help="Path to the input file")
+    parser.add_argument("output_file", help="Path to the output TOML file")  # Added argument for output file
+    args = parser.parse_args()
+
+    try:
+        with open(args.input_file, "r") as f:
+            input_text = f.read()
+
+        parser = ConfigParser()
+        parsed_output = parser.parse(input_text)
+
+        # Write the parsed output to the provided TOML file
+        with open(args.output_file, "w") as out_f:
+            out_f.write(toml.dumps(parsed_output))
+
+        print(f"Output written to {args.output_file}")
+
+    except FileNotFoundError:
+        print(f"Error: File not found - {args.input_file}", file=sys.stderr)
+        sys.exit(1)
+    except SyntaxError as e:
+        print(f"Syntax Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except ValueError as e:
+        print(f"Value Error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    file_path = sys.argv[1]
-    parse_file(file_path)
+
+if __name__ == "__main__":
+    main()

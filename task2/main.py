@@ -20,7 +20,7 @@ def read_git_object(repo_path, object_hash):
     return decompressed_data
 
 def parse_commit_object(repo_path, commit_hash):
-    """Парсит объект коммита, извлекает дерево, родителей, временную метку и файлы."""
+    """Парсит объект коммита, извлекает дерево, xwродителей, временную метку и файлы."""
     commit_data = read_git_object(repo_path, commit_hash)
     _, content = commit_data.split(b"\x00", 1)
     lines = content.decode().split("\n")
