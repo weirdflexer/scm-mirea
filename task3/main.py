@@ -100,7 +100,6 @@ class ConfigParser:
 def main():
     parser = argparse.ArgumentParser(description="CLI Config Language Parser")
     parser.add_argument("input_file", help="Path to the input file")
-    parser.add_argument("output_file", help="Path to the output TOML file")  # Added argument for output file
     args = parser.parse_args()
 
     try:
@@ -110,11 +109,8 @@ def main():
         parser = ConfigParser()
         parsed_output = parser.parse(input_text)
 
-        # Write the parsed output to the provided TOML file
-        with open(args.output_file, "w") as out_f:
-            out_f.write(toml.dumps(parsed_output))
-
-        print(f"Output written to {args.output_file}")
+        # Write the parsed output to standard output
+        print(toml.dumps(parsed_output))
 
     except FileNotFoundError:
         print(f"Error: File not found - {args.input_file}", file=sys.stderr)
