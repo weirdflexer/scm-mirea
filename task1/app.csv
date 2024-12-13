@@ -442,3 +442,8 @@
 2024-12-13 13:23:47,145,__main__,DEBUG,Command executed: tail test1.txt
 2024-12-13 13:23:52,006,__main__,DEBUG,Executing tail command on file: test2.txt
 2024-12-13 13:23:52,009,__main__,DEBUG,Command executed: tail test2.txt
+2024-12-13 15:30:17,980,__main__,DEBUG,Config loaded: vfs_path=virtual_fs.zip, startup_script=startup.sh
+2024-12-13 15:30:17,981,__main__,DEBUG,VFS initialized: vfs_path=virtual_fs.zip
+2024-12-13 15:30:17,981,__main__,DEBUG,Emulator initialized
+2024-12-13 15:30:18,160,__main__,DEBUG,Listing files in current directory: 
+2024-12-13 15:30:18,160,__main__,DEBUG,Command executed: ls
