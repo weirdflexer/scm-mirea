@@ -1,16 +1,21 @@
 @startuml
 digraph G {
+    "83042dc1bfc4ea09efc5d474e106a79013da9a68" -> ".DS_Store"
     "269a80294490dec93a3853370c0a949636f861cb" -> ".DS_Store"
+    "83042dc1bfc4ea09efc5d474e106a79013da9a68" -> "helloworld.py"
     "269a80294490dec93a3853370c0a949636f861cb" -> "helloworld.py"
     "49abbe7c45e7bdbb9feffd470b24a5a3a18a356f" -> "helloworld.py"
+    "83042dc1bfc4ea09efc5d474e106a79013da9a68" -> "index.html"
     "269a80294490dec93a3853370c0a949636f861cb" -> "index.html"
     "49abbe7c45e7bdbb9feffd470b24a5a3a18a356f" -> "index.html"
     "873fe4c7767935e93dca48bd37aad55a4a97cd74" -> "index.html"
+    "83042dc1bfc4ea09efc5d474e106a79013da9a68" -> "test/go/helloworld.go"
+    "83042dc1bfc4ea09efc5d474e106a79013da9a68" -> "test/test.txt"
     "269a80294490dec93a3853370c0a949636f861cb" -> "test/test.txt"
+    "83042dc1bfc4ea09efc5d474e106a79013da9a68" -> "text.txt"
     "269a80294490dec93a3853370c0a949636f861cb" -> "text.txt"
     "49abbe7c45e7bdbb9feffd470b24a5a3a18a356f" -> "text.txt"
     "873fe4c7767935e93dca48bd37aad55a4a97cd74" -> "text.txt"
     "d6ac09c928f9301854adf1f8ef42ed7b7e642a8f" -> "text.txt"
-    "анвар?" -> "ЛОХ ЕБАНЫЙ"
 }
 @enduml

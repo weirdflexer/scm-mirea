@@ -413,3 +413,32 @@
 2024-11-29 13:37:06,668,__main__,DEBUG,Command executed: tail test2.txt
 2024-11-29 13:37:12,953,__main__,DEBUG,Executing tail command on file: test1.txt
 2024-11-29 13:37:12,955,__main__,DEBUG,Command executed: tail test1.txt
+2024-12-13 13:18:28,190,core,DEBUG,Config loaded: vfs_path=virtual_fs.zip, startup_script=startup.sh
+2024-12-13 13:18:28,191,core,DEBUG,VFS initialized: vfs_path=virtual_fs.zip
+2024-12-13 13:18:28,192,core,DEBUG,Emulator initialized
+2024-12-13 13:18:28,192,core,DEBUG,Changing directory: var
+2024-12-13 13:18:28,192,core,DEBUG,Command executed: cd var
+2024-12-13 13:18:28,192,core,DEBUG,Config loaded: vfs_path=virtual_fs.zip, startup_script=startup.sh
+2024-12-13 13:18:28,192,core,DEBUG,VFS initialized: vfs_path=virtual_fs.zip
+2024-12-13 13:18:28,192,core,DEBUG,Emulator initialized
+2024-12-13 13:18:28,192,core,DEBUG,Listing files in current directory: 
+2024-12-13 13:18:28,192,core,DEBUG,Command executed: ls
+2024-12-13 13:18:28,192,core,DEBUG,Listing files in current directory: 
+2024-12-13 13:18:28,192,core,DEBUG,Config loaded: vfs_path=virtual_fs.zip, startup_script=startup.sh
+2024-12-13 13:18:28,193,core,DEBUG,VFS initialized: vfs_path=virtual_fs.zip
+2024-12-13 13:18:28,193,core,DEBUG,Emulator initialized
+2024-12-13 13:18:28,193,core,DEBUG,Command executed: uname
+2024-12-13 13:22:32,715,__main__,DEBUG,Config loaded: vfs_path=virtual_fs.zip, startup_script=startup.sh
+2024-12-13 13:22:32,716,__main__,DEBUG,VFS initialized: vfs_path=virtual_fs.zip
+2024-12-13 13:22:32,716,__main__,DEBUG,Emulator initialized
+2024-12-13 13:22:32,920,__main__,DEBUG,Listing files in current directory: 
+2024-12-13 13:22:32,920,__main__,DEBUG,Command executed: ls
+2024-12-13 13:22:38,506,__main__,DEBUG,Listing files in current directory: 
+2024-12-13 13:22:38,507,__main__,DEBUG,Command executed: ls
+2024-12-13 13:23:39,370,__main__,DEBUG,Command executed: uname 
+2024-12-13 13:23:43,030,__main__,DEBUG,Executing tail command on file: test.txt
+2024-12-13 13:23:43,031,__main__,DEBUG,Command executed: tail test.txt
+2024-12-13 13:23:47,144,__main__,DEBUG,Executing tail command on file: test1.txt
+2024-12-13 13:23:47,145,__main__,DEBUG,Command executed: tail test1.txt
+2024-12-13 13:23:52,006,__main__,DEBUG,Executing tail command on file: test2.txt
+2024-12-13 13:23:52,009,__main__,DEBUG,Command executed: tail test2.txt
